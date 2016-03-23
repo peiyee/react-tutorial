@@ -17,28 +17,40 @@ var WorkBox = React.createClass({
 		return{data: [{id: uuid(),day: "Monday",open: "3pm",close: "5pm"},
 						{id: uuid(),day: "Monday",open: "3pm",close: "5pm"}]};
 	},
-	testing: function(value){
+	addWorkingDayData: function(value){
 		var works = this.state.data;
 		works.push(value);
+		this.setState({data: works});
+	},
+	deleteWorkingDayData: function(value){
+		var works = this.state.data;
+		for(var i=works.length-1; i>=0; i--) {
+		    if( works[i].id == value) 
+		    	works.splice(i,1);
+		}
 		this.setState({data: works});
 	},
 	render: function() {
 		return(
 			<div className="calendarBox">
-				<WorkList data={this.state.data}/>
-				<WorkForm onChange={this.testing}/>
+				<WorkList onDeleteItem={this.deleteWorkingDayData} data={this.state.data}/>
+				<WorkForm onChange={this.addWorkingDayData}/>
 			</div>
 		);
 	}
 });
 var WorkList = React.createClass({
-	handleSingleWork: function(){
-		console.log("a");
-	},
 	render: function(){
-			var rows = this.props.data.map(function(entry){
+			var rows = this.props.data.map(function(entry,i){
 				return(
-						<WorkingDay day={entry.day} open={entry.open} close={entry.close}  key={entry.id}/>
+						<WorkingDay 
+						onDeleteItem={this.props.onDeleteItem}  
+						day={entry.day} 
+						open={entry.open} 
+						close={entry.close} 
+						key={entry.id} 
+						id={entry.id}
+						/>
 					);
 			},this);
 			return(
@@ -50,9 +62,12 @@ var WorkList = React.createClass({
 	}
 });
 var WorkingDay = React.createClass({
+	handleClick: function(){
+		this.props.onDeleteItem(this.props.id);
+	},
 	render: function(){
 		return(
-				<div key={this.props.id}>
+				<div onClick={this.handleClick}>
 					{this.props.day} {this.props.open} to {this.props.close}
 				</div>
 			);
