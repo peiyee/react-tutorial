@@ -1,6 +1,6 @@
 var WorkBox = React.createClass({
 	getInitialState: function(){
-		return{data: []};
+		return{data: [{id: Date.now(),day: "Monday",open: "3pm",close: "5pm"}]};
 	},
 	testing: function(value){
 		var works = this.state.data;
@@ -24,7 +24,8 @@ var WorkList = React.createClass({
 					);
 			});
 			return(
-				<div className="workList">
+				<div className="ui message">
+					<div className="header">Operation Hours</div>
 					{rows}
 				</div>
 				);
@@ -33,14 +34,9 @@ var WorkList = React.createClass({
 var WorkRow = React.createClass({
 	render: function(){
 		return(
-			<div className="workRow">
-				<h2>day</h2>
-				<div>{this.props.day}</div>
-				<h2>open</h2>
-				<div>{this.props.open}</div>
-				<h2>close</h2>
-				<div>{this.props.close}</div>
-			</div>
+				<p>
+					{this.props.day} {this.props.open} to {this.props.close}
+				</p>
 			);
 	}
 });
@@ -69,14 +65,31 @@ var WorkForm = React.createClass({
 	},
 	render: function(){
 		return(
-			<form onSubmit={this.handleSubmitWork} className="workForm">
-				<h2>day</h2>
-				<input type="text" onChange={this.handleDayChange} value={this.state.day}/>
-				<h2>open</h2>
-				<input type="text" onChange={this.handleOpenChange} value={this.state.open}/>
-				<h2>close</h2>
-				<input type="text" onChange={this.handleCloseChange} value={this.state.close}/>
-				<input type="submit" value="Add more"/>
+			<form onSubmit={this.handleSubmitWork} className="ui form">
+			    <div className="three fields">
+			      <div className="field">
+			        <label>Day</label>
+			        <input 
+			         type="text" 
+			         onChange={this.handleDayChange} 
+			         value={this.state.day}/>
+			      </div>
+			      <div className="field">
+							    <label>Open</label>
+							    <input 
+			         type="text" 
+			         onChange={this.handleOpenChange} 
+			         value={this.state.open}/>
+			      </div>
+			      <div className="field">
+							   <label>close</label>
+							   <input 
+			        type="text" 
+			        onChange={this.handleCloseChange} 
+			        value={this.state.close}/>
+			      </div>
+			    </div>
+				<input className="ui button" type="submit" value="Add more"/>
 			</form>
 			);
 	}
