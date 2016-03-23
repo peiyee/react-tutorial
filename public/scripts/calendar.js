@@ -1,6 +1,21 @@
+function uuid() {
+    var i, random;
+    var uuid = '';
+    for (i = 0; i < 32; i++) {
+        random = Math.random() * 16 | 0;
+        if (i === 8 || i === 12 || i === 16 || i === 20) {
+            uuid += '-';
+        }
+
+        uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)).toString(16);
+    }
+    return uuid;
+}
+
 var WorkBox = React.createClass({
 	getInitialState: function(){
-		return{data: [{id: Date.now(),day: "Monday",open: "3pm",close: "5pm"}]};
+		return{data: [{id: uuid(),day: "Monday",open: "3pm",close: "5pm"},
+						{id: uuid(),day: "Monday",open: "3pm",close: "5pm"}]};
 	},
 	testing: function(value){
 		var works = this.state.data;
@@ -17,12 +32,15 @@ var WorkBox = React.createClass({
 	}
 });
 var WorkList = React.createClass({
+	handleSingleWork: function(){
+		console.log("a");
+	},
 	render: function(){
 			var rows = this.props.data.map(function(entry){
 				return(
-					<WorkRow day={entry.day} open={entry.open} close={entry.close} key={entry.id}/>
+						<WorkingDay day={entry.day} open={entry.open} close={entry.close}  key={entry.id}/>
 					);
-			});
+			},this);
 			return(
 				<div className="ui message">
 					<div className="header">Operation Hours</div>
@@ -31,12 +49,12 @@ var WorkList = React.createClass({
 				);
 	}
 });
-var WorkRow = React.createClass({
+var WorkingDay = React.createClass({
 	render: function(){
 		return(
-				<p>
+				<div key={this.props.id}>
 					{this.props.day} {this.props.open} to {this.props.close}
-				</p>
+				</div>
 			);
 	}
 });
@@ -89,7 +107,7 @@ var WorkForm = React.createClass({
 			        value={this.state.close}/>
 			      </div>
 			    </div>
-				<input className="ui button" type="submit" value="Add more"/>
+				<input className="ui button" type="submit" value="Save"/>
 			</form>
 			);
 	}
